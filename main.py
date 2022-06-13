@@ -1,7 +1,7 @@
 import cmd
 import requests
 
-API_URL = "https://rti-api.afonsosantos.me/api/"
+API_URL = "http://localhost:8080/api/"
 
 
 class CmdInterface(cmd.Cmd):
@@ -30,6 +30,22 @@ class CmdInterface(cmd.Cmd):
         res = requests.post(
             API_URL + "eventos.php",
             json={"event_name": "TOGGLE_LIGHTS", "action": "ADD"},
+            headers={"X-Auth-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+                                     ".eyJ1c2VybmFtZSI6ImlvdCIsInRpbWVzdGFtcCI6MTY1MzY0NjI0N30"
+                                     ".HpafidXvLMIUuHdfE9B2Gwds_iwMIzWALm8O5IHgZZA"}
+        )
+
+        if res.ok:
+            print("Evento adicionado!\n")
+        else:
+            print("Ocorreu um erro: " + res.text + "\n")
+
+    @staticmethod
+    def do_logout(self):
+        """Termina todas as sessões do dashboard ativas."""
+        res = requests.post(
+            API_URL + "eventos.php",
+            json={"event_name": "CLOSE_SESSION", "action": "ADD"},
             headers={"X-Auth-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
                                      ".eyJ1c2VybmFtZSI6ImlvdCIsInRpbWVzdGFtcCI6MTY1MzY0NjI0N30"
                                      ".HpafidXvLMIUuHdfE9B2Gwds_iwMIzWALm8O5IHgZZA"}
